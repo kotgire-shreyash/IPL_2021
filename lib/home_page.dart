@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:ipl_2021/extra_data.dart';
 import 'package:ipl_2021/players_team.dart';
 import 'package:mysql1/mysql1.dart';
 
@@ -12,6 +13,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  var code = new Extra();
+
   late List listOfdata;
   bool controller = true;
   var result = 'Intial data';
@@ -24,7 +27,7 @@ class _HomePageState extends State<HomePage> {
           height: 60,
         ),
         centerTitle: true,
-        elevation: 5,
+        elevation: 10,
         toolbarHeight: 70,
       ),
       body: controller
@@ -66,7 +69,7 @@ class _HomePageState extends State<HomePage> {
                               style: TextStyle(fontSize: 25.0),
                             ),
                             subtitle: Text(
-                              'Captain Name',
+                              code.homeGround[index],
                               style: TextStyle(fontSize: 18.0),
                             ),
                             minVerticalPadding: 8,
@@ -83,31 +86,6 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 );
-                // return Container(
-                //   child: ListTile(
-                //     leading: Icon(Icons.list),
-                //     title: Text(teamName),
-                //     onTap: () {
-                //       Navigator.push(
-                //           context,
-                //           MaterialPageRoute(
-                //               builder: (context) =>
-                //                   PlayersTeam(teamId: teamId)));
-                //     },
-                //   ),
-                //   decoration: BoxDecoration(
-                //     gradient: LinearGradient(
-                //       colors: [
-                //         const Color(0xFF3366FF),
-                //         const Color(0xFF00CCFF),
-                //       ],
-                //       begin: const FractionalOffset(0.0, 0.0),
-                //       end: const FractionalOffset(1.0, 0.0),
-                //       stops: [0.0, 1.0],
-                //       tileMode: TileMode.clamp,
-                //     ),
-                //   ),
-                // );
               }),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {

@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
-import 'package:ipl_2021/hard_code.dart';
+import 'package:ipl_2021/extra_data.dart';
 import 'package:mysql1/mysql1.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -16,6 +16,7 @@ class PlayersTeam extends StatefulWidget {
 class _PlayersTeamState extends State<PlayersTeam> {
   bool controller = true;
   late List<ResultRow> playersList;
+  var data = Extra();
   void query() async {
     var settings = ConnectionSettings(
       host: 'database-2.co4a74ziokri.us-east-1.rds.amazonaws.com',
@@ -46,7 +47,6 @@ class _PlayersTeamState extends State<PlayersTeam> {
     var conn = await MySqlConnection.connect(settings);
     var result = await conn
         .query('delete from players where playerid = $deleteplayerId');
-    print(result);
     conn.close();
   }
 
@@ -71,8 +71,24 @@ class _PlayersTeamState extends State<PlayersTeam> {
       db: 'cricketmanagement',
     );
     var conn = await MySqlConnection.connect(settings);
-    var result = await conn.query(
-        'INSERT INTO players VALUES($playerid,$name,$matchno,$runs,$highscore,$average,$strikerate,$centuries,$halfcen,$fours,$sixes,$teamid);');
+    var result = await conn
+        .query('insert into players values(?,?,?,?,?,?,?,?,?,?,?,?)', [
+      playerid,
+      '$name',
+      matchno,
+      runs,
+      highscore,
+      average,
+      strikerate,
+      centuries,
+      halfcen,
+      fours,
+      sixes,
+      teamid
+    ]);
+    print('excuted');
+    conn.close();
+    Fluttertoast.showToast(msg: 'Record Added', backgroundColor: Colors.grey);
   }
 
   @override
@@ -119,7 +135,9 @@ class _PlayersTeamState extends State<PlayersTeam> {
                                     labelText: 'Player Name',
                                     hintText: 'Enter Player Name',
                                   ),
-                                  onSubmitted: (value) {},
+                                  onChanged: (value) {
+                                    data.name = value;
+                                  },
                                 ),
                               ),
                               SizedBox(
@@ -138,6 +156,9 @@ class _PlayersTeamState extends State<PlayersTeam> {
                                         labelText: 'Matches Played',
                                         hintText: 'Enter No of matches played',
                                       ),
+                                      onChanged: (value) {
+                                        data.matchno = value;
+                                      },
                                     ),
                                   ),
                                   Container(
@@ -149,6 +170,9 @@ class _PlayersTeamState extends State<PlayersTeam> {
                                         labelText: 'player id',
                                         hintText: 'Enter Player id',
                                       ),
+                                      onChanged: (value) {
+                                        data.playerid = value;
+                                      },
                                     ),
                                   ),
                                 ],
@@ -169,6 +193,9 @@ class _PlayersTeamState extends State<PlayersTeam> {
                                         labelText: 'High Score',
                                         hintText: 'Enter High Score',
                                       ),
+                                      onChanged: (value) {
+                                        data.highscore = value;
+                                      },
                                     ),
                                   ),
                                   Container(
@@ -180,6 +207,9 @@ class _PlayersTeamState extends State<PlayersTeam> {
                                         labelText: 'Average',
                                         hintText: 'Enter Average',
                                       ),
+                                      onChanged: (value) {
+                                        data.average = value;
+                                      },
                                     ),
                                   ),
                                 ],
@@ -200,6 +230,9 @@ class _PlayersTeamState extends State<PlayersTeam> {
                                         labelText: 'Runs',
                                         hintText: 'Enter Runs',
                                       ),
+                                      onChanged: (value) {
+                                        data.runs = value;
+                                      },
                                     ),
                                   ),
                                   Container(
@@ -211,6 +244,9 @@ class _PlayersTeamState extends State<PlayersTeam> {
                                         labelText: 'Strike Rate',
                                         hintText: 'Enter Strike Rate',
                                       ),
+                                      onChanged: (value) {
+                                        data.strikerate = value;
+                                      },
                                     ),
                                   ),
                                 ],
@@ -231,6 +267,9 @@ class _PlayersTeamState extends State<PlayersTeam> {
                                         labelText: 'Centuries',
                                         hintText: 'Enter No of centuries',
                                       ),
+                                      onChanged: (value) {
+                                        data.centuries = value;
+                                      },
                                     ),
                                   ),
                                   Container(
@@ -242,6 +281,9 @@ class _PlayersTeamState extends State<PlayersTeam> {
                                         labelText: 'Half Centuries',
                                         hintText: 'No. of Half Centuries',
                                       ),
+                                      onChanged: (value) {
+                                        data.halfcen = value;
+                                      },
                                     ),
                                   ),
                                 ],
@@ -262,6 +304,9 @@ class _PlayersTeamState extends State<PlayersTeam> {
                                         labelText: 'Fours',
                                         hintText: 'No. of fours',
                                       ),
+                                      onChanged: (value) {
+                                        data.fours = value;
+                                      },
                                     ),
                                   ),
                                   Container(
@@ -273,6 +318,9 @@ class _PlayersTeamState extends State<PlayersTeam> {
                                         labelText: 'Sixes',
                                         hintText: 'No. of Sixes',
                                       ),
+                                      onChanged: (value) {
+                                        data.sixes = value;
+                                      },
                                     ),
                                   ),
                                 ],
@@ -283,6 +331,19 @@ class _PlayersTeamState extends State<PlayersTeam> {
                               ElevatedButton(
                                   onPressed: () {
                                     Navigator.pop(context);
+                                    create(
+                                        data.playerid,
+                                        data.name,
+                                        data.matchno,
+                                        data.runs,
+                                        data.highscore,
+                                        data.average,
+                                        data.strikerate,
+                                        data.centuries,
+                                        data.halfcen,
+                                        data.fours,
+                                        data.sixes,
+                                        widget.teamId);
                                   },
                                   child: Text("SUBMIT")),
                             ],
@@ -346,9 +407,11 @@ class _PlayersTeamState extends State<PlayersTeam> {
                             // horizontalTitleGap: 15,
                             trailing: IconButton(
                                 onPressed: () {
-                                  Fluttertoast.showToast(
-                                      msg: 'Record is deleted');
                                   delete(playerid);
+                                  Fluttertoast.showToast(
+                                    msg: 'Record is deleted',
+                                    backgroundColor: Colors.grey,
+                                  );
                                 },
                                 icon: Icon(
                                   Icons.delete_outlined,
